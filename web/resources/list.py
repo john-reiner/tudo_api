@@ -17,24 +17,33 @@ def check_if_list_exists(id):
     list_to_check = lists.find({"_id": bson.objectid.ObjectId(id)})
 
     if list_to_check is None:
-        return False  
+        return False
 
     return list_to_check
 
 class List(Resource):
     def get(self, list_id):
 
-        return_list = check_if_list_exists(list_id)
+        get_list = check_if_list_exists(list_id)
 
-        if not return_list:
-            return jsonify({"error": "list not found"})
+        if not get_list:
+            return jsonify({
+                "status" : 301,
+                "message": "list not found"
+            })
 
         data = []
-        for list in return_list:
+        for list in get_list:
             data.append({"name" : list["name"], "date": list["date"], "id": str(list["_id"])})
 
         return jsonify(data)
-        
+
+    def put(self, list_id):
+
+        put_list = check_if_list_exists(list_id)
+
+        if not put_list:
+            return jsonify({"message" : "list not found"})
 
 class Lists(Resource):
 
